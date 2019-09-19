@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .container {
+            width: 970px;
+            margin: 0px auto;
+            padding: 10px 10px;
+        }
+
+        .success_logged_user h3 {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .user_info {
+            margin-left: 460px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .user_info h3 {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .user_info a {
+            margin-top: 20px;
+            margin-left: 60px;
+            font-size: 20px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .success_logged_user {
+            border-bottom: 2px solid black;
+        }
+
+        .post_new_message {
+            margin-top: 50px;
+            margin-left: 60px;
+        }
+
+        .post_history {
+            margin-top: 50px;
+            margin-left: 60px;
+        }
+        .post_history h4{
+            display: inline-block;
+            vertical-align: top;
+        }
+        .post_history button{
+            margin-top: -40px;
+            margin-left: 300px;
+            display: inline-block;
+            vertical-align: top;
+            height: 30px;
+            width: 100px;
+            color: white;
+            border-radius: 10px;
+            background-color: rgb(194, 118, 118);
+        }
+        .post_history p{
+            margin-left: 30px;
+            font-size: 18px;
+            line-height: 25px;
+        }
+
+        .post_new_message textarea {
+            font-size: 15px;
+        }
+
+        .post_new_message button {
+            height: 45px;
+            width: 150px;
+            margin-top: 20px;
+            margin-left: 775px;
+            font-size: 15px;
+            border-radius: 10px;
+            color: white;
+            background-color: rgb(41, 41, 226);
+        }
+
+        .comment_post h4 {
+            margin-left: 30px;
+        }
+
+        .comment_post textarea {
+            width: 860px;
+            margin-left: 30px;
+        }
+
+        .comment_post button {
+            height: 45px;
+            width: 150px;
+            margin-top: 20px;
+            margin-left: 750px;
+            font-size: 15px;
+            border-radius: 10px;
+            color: white;
+            background-color: rgb(15, 73, 15);
+        }
+
+        .comment_block {
+            margin-left: 30px;
+        }
+    </style>
+    <title>Main</title>
+</head>
+
+<body>
+    <div class='container'>
+        <div class='success_logged_user'>
+            <h3>Conding Dojo Wall</h3>
+            <div class='user_info'>
+                <h3>Welcome, {{logged_user_info.first_name}} {{logged_user_info.last_name}}!</h3>
+                <a href='/clear_session'>Log Out</a>
+            </div>
+        </div>
+        <div class='post_new_message'>
+            <form action='/new_post' method='post'>
+                {% csrf_token %}
+                <h4>Post a message</h4>
+                <textarea name="new_post_desc" rows="8" cols="113">
+                    </textarea>
+                <button>Post a message</button>
+            </form>
+        </div>
+        <div class='post_history'>
+            {% for messageobj in messages%}
+            <h4>{{messageobj.user_id.first_name}} {{messageobj.user_id.last_name}} - {{messageobj.create_at}}</h4>
+            {%if messageobj.user_id.first_name ==  logged_user_info.first_name%}
+                <form action='/delete_message' method='post'>
+                    {% csrf_token %}
+                    <button name='delete_post' value='{{messageobj.id}}'>Delete</button>
+                </form>
+            {%endif%}
+            <p>{{messageobj.message}}</p>
+            
+            {% for commentobj in comments%}
+                {%if commentobj.message_id.id ==  messageobj.id %}
+                <div class='comment_block'>
+                    <h4>{{commentobj.user_id.first_name}} {{commentobj.user_id.last_name}} - {{commentobj.create_at}}</h4>
+                    <p>{{commentobj.comment}}</p>
+                </div>
+                {%endif%}
+            {% endfor %}
+            <div class=comment_post>
+                <form action='/comment' method='post'>
+                    {% csrf_token %}
+                    <input type="hidden" name='message_id' value='{{messageobj.id}}'>
+                    <h4>Post a comment</h4>
+                    <textarea name="post_comment" rows="5" cols="113">
+                                    </textarea>
+                    <button>Post a comment</button>
+                </form>
+            </div>
+        {% endfor%}
+        </div>
+    </div>
+
+</body>
+
+</html>

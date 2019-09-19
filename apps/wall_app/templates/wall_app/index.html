@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .container{
+                width: 970px;
+                margin: 0px auto;
+            }
+            .registration{
+                width: 470px;
+                margin-top: 60px;
+                margin-right: 10px;
+                margin-left: 7px;
+                display: inline-block;
+                vertical-align: top;
+            }
+            .login{
+                width: 470px;
+                margin-top: 60px;
+                display: inline-block;
+                vertical-align: top;
+            }
+            h1{
+                margin-left: 70px;
+                margin-bottom: 40px;
+            }
+            .reg_first_name, .reg_last_name, .reg_email, .reg_password, .reg_pass_conf{
+                margin-bottom: 20px;
+                margin-left: 15px;
+                font-size: 20px;
+            }
+            label{
+                margin-right: 50px
+            }
+            input[type='text']{
+                height: 25px;
+                width: 250px;
+                margin-left: 40px;
+            }
+            button{
+                height: 40px;
+                width: 150px;
+                font-size: 15px;
+                margin-top: 10px;
+                margin-left: 150px;
+                border-radius: 10px;
+            }
+            .login_email, .login_password{
+                margin-left: 15px;
+                font-size: 20px; 
+                margin-bottom: 20px;
+            }
+            .login_password input{
+                margin-left: 10px;
+            }
+            .reg_email input{
+                margin-left: 80px;
+            }
+            .reg_password input{
+                margin-left: 50px;
+            }
+            .reg_pass_conf input{
+                margin-left: -21px;
+                margin-bottom: 20px;
+            }
+
+        </style>
+        <title>Login and Registration</title>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='registration'>
+                <h1>Registration</h1>
+                {%if messages%}
+                <ul class='messages'>
+                    {%for message in messages%}
+                    {% if message.tags.0 == "r" %}<li  class="{{message.tags}}">{{ message }}</li>{% endif%}
+                    {%endfor%}
+                </ul>
+                {%endif%}
+                <form action='/register' method='post'>
+                    {% csrf_token %}
+
+                    <div class='reg_first_name'>
+                        <label>First Name</label>
+                        <input type='text' name='first_name' required>
+                    </div>
+                    <div class='reg_last_name'>
+                        <label>Last Name</label>
+                        <input type='text' name='last_name' required>
+                    </div>
+                    <div class='reg_email'>
+                        <label>Email</label>
+                        <input type='text' name='reg_email' required>
+                    </div>
+                    <div class='reg_password'>
+                        <label>Password</label>
+                        <input type='text' name='new_password' required>
+                    </div>
+                    <div class='reg_pass_conf'>
+                        <label>Confirm Password</label>
+                        <input type='text' name='confirm_password' required>
+                    </div>
+                    <button name='sub_registration'>Register</button>
+                </form>
+            </div>
+            <div class='login'>
+                <h1>Login</h1>
+                {%if messages%}
+                <ul class='messages'>
+                    {%for message in messages%}
+                    {% if message.tags.0 == "l" %}<li  class="{{message.tags}}">{{ message }}</li>{% endif%}
+                    {%endfor%}
+                </ul>
+                {%endif%}
+                <form action='/authenticate' method='post'>
+                    {% csrf_token %}
+                    <div class='login_email'>
+                        <label>Email</label>
+                        <input type='text' name='email' required>
+                    </div>
+                    <div class='login_password'>
+                        <label>Password</label>
+                        <input type='password' name='user_password' required>
+                    </div>
+                    <button name='login_btn'>Login</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
